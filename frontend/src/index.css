@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Houschka Rounded", "Nunito Sans", "Trebuchet MS", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --brand-rainforest: #033f2d;
+  --brand-treetop: #4e6b31;
+  --brand-limeade: #d6e151;
+  --brand-greenery: #7fa53f;
+  --brand-green-essence: #ecebcb;
+}
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --app-bg: #f6f7f1;
+  --surface: #ffffff;
+  --surface-muted: #ecebcb;
+  --text-primary: #183b2b;
+  --text-secondary: #63715f;
+  --border: #dfe5d6;
+  --accent: #033f2d;
+  --accent-hover: #4e6b31;
+  --accent-text: #ffffff;
+  --highlight: #d6e151;
+  --success: #4e6b31;
+  --danger: #b42318;
+  --focus-ring: #7fa53f;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --app-bg: #10251d;
+  --surface: #18382b;
+  --surface-muted: #244533;
+  --text-primary: #f4f5e9;
+  --text-secondary: #bdcbb6;
+  --border: #345341;
+  --accent: #d6e151;
+  --accent-hover: #e4ec82;
+  --accent-text: #18301f;
+  --highlight: #d6e151;
+  --success: #a8ca70;
+  --danger: #ff8b82;
+  --focus-ring: #d6e151;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--app-bg);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--app-bg);
+  color: var(--text-primary);
+  font-family: "Houschka Rounded", "Nunito Sans", "Trebuchet MS", sans-serif;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--brand-rainforest);
+  background: var(--brand-limeade);
+}
+
+#root {
+  min-height: 100vh;
+}

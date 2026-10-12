@@ -1,0 +1,3 @@
+export default function AdminBoardrooms() {
+  return <h1 className="text-3xl font-bold">AdminBoardrooms</h1>;
+}
