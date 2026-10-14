@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   CalendarDays,
@@ -11,7 +12,9 @@ import {
   Sun,
   Users,
   Building,
+  Wrench,
   ClipboardList,
+  Bell,
   UserRound,
   Settings,
   LogOut,
@@ -30,10 +33,15 @@ const adminLinks = [
   { label: "Boardrooms", to: "/admin/boardrooms", icon: Building2 },
   { label: "Users", to: "/admin/users", icon: Users },
   { label: "Companies", to: "/admin/companies", icon: Building },
+  { label: "Maintanence", to: "/admin/maintenance", icon: Wrench },
   { label: "Audit Logs", to: "/admin/audit-logs", icon: ClipboardList },
 ];
 
-export default function AppLayout() {
+type AppLayoutProps = {
+  unreadCount: number;
+};
+
+export default function AppLayout({ unreadCount }: AppLayoutProps) {
   const location = useLocation();
 
   const [theme, setTheme] = useState<Theme>(() => {
@@ -52,6 +60,7 @@ export default function AppLayout() {
   const collapsed = !isNavLocked && !isNavHovered;
 
   const [profileOpen, setProfileOpen] = useState(false);
+  const navigate = useNavigate();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
@@ -230,7 +239,12 @@ export default function AppLayout() {
             mobileNavOpen ? "translate-x-0" : "-translate-x-full"
           } ${collapsed ? "md:w-22" : "md:w-72"}`}
         >
-          <div className="flex min-h-0 flex-1 flex-col">{sidebarContent()}</div>
+          <div className="flex min-h-0 flex-1 flex-col md:hidden">
+            {sidebarContent(true)}
+          </div>
+          <div className="hidden min-h-0 flex-1 flex-col md:flex">
+            {sidebarContent()}
+          </div>
 
           <button
             type="button"
@@ -282,6 +296,21 @@ export default function AppLayout() {
                 ) : (
                   <Sun size={18} strokeWidth={1.8} />
                 )}
+              </button>
+
+              <button
+                type="button"
+                aria-label="Open notifications"
+                title="Notifications"
+                onClick={() => navigate("/notifications")}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-(--border) bg-(--surface) transition hover:bg-(--surface-muted)"
+              >
+                <span className="relative">
+                  <Bell size={18} strokeWidth={1.8} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -right-1.5 -top-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-(--surface)" />
+                  )}
+                </span>
               </button>
 
               <div className="relative">

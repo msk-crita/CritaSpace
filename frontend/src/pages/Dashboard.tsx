@@ -257,7 +257,18 @@ export default function Dashboard() {
                   type="button"
                   onClick={() =>
                     navigate(
-                      `/boardrooms/${room.id === 1 ? "boardroom-a" : room.id === 2 ? "boardroom-b" : "boardroom-c"}`,
+                      `/boardrooms/${
+                        room.id === 1
+                          ? "boardroom-a"
+                          : room.id === 2
+                            ? "boardroom-b"
+                            : "boardroom-c"
+                      }`,
+                      {
+                        state: {
+                          selectedDate: selectedDate.toISOString(),
+                        },
+                      },
                     )
                   }
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-(--accent) px-4 py-3 text-sm font-semibold text-(--accent-text) transition hover:opacity-90"
