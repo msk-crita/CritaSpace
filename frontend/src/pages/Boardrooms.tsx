@@ -89,6 +89,7 @@ function Boardrooms() {
   const [endTime, setEndTime] = useState("18:00");
 
   const [bookingError, setBookingError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     const dateFromDashboard = location.state?.selectedDate;
@@ -377,6 +378,7 @@ function Boardrooms() {
               className="mt-6 space-y-5"
               onSubmit={(event) => {
                 event.preventDefault();
+                if (isSubmitting) return;
                 setBookingError("");
                 if (!meetingTitle.trim()) {
                   setBookingError("Please enter a meeting title.");
@@ -427,9 +429,15 @@ function Boardrooms() {
                   return;
                 }
 
-                window.alert(
-                  "Validation passed. Booking submission will be enabled after backend integration.",
-                );
+                setIsSubmitting(true);
+
+                try {
+                  window.alert(
+                    "Validation passed. Booking submission will be enabled after backend integration.",
+                  );
+                } finally {
+                  setIsSubmitting(false);
+                }
               }}
             >
               <div>
@@ -505,11 +513,13 @@ function Boardrooms() {
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
-                  className="rounded-xl bg-(--accent) px-5 py-2.5 text-sm font-semibold text-(--accent-text) hover:opacity-90"
+                  disabled={isSubmitting}
+                  className="rounded-xl bg-(--accent) px-5 py-2.5 text-sm font-semibold text-(--accent-text) hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Continue
+                  {isSubmitting ? "Processing..." : "Continue"}
                 </button>
               </div>
 
