@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { useNavigate } from "react-router-dom";
 import {
   CalendarDays,
   PanelLeft,
@@ -61,6 +63,15 @@ export default function AppLayout({ unreadCount }: AppLayoutProps) {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  };
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
@@ -369,12 +380,7 @@ export default function AppLayout({ unreadCount }: AppLayoutProps) {
 
                       <button
                         type="button"
-                        onClick={() => {
-                          setProfileOpen(false);
-                          window.alert(
-                            "Sign out will be enabled after Firebase Authentication is connected.",
-                          );
-                        }}
+                        onClick={handleSignOut}
                         className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-(--danger) transition hover:bg-(--surface-muted)"
                       >
                         <LogOut size={17} />
