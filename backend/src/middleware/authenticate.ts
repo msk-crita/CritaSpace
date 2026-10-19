@@ -1,10 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
-import { auth } from "../config/firebase.js";
+import { auth, db } from "../config/firebase.js";
 
 export interface AuthenticatedRequest extends Request {
   user?: {
     uid: string;
     email?: string;
+    displayName: string;
+    companyId: string;
+    role: "admin" | "user";
+    status: "active" | "disabled";
   };
 }
 
@@ -42,9 +46,55 @@ export async function authenticate(
   try {
     const decodedToken = await auth.verifyIdToken(token);
 
+    const userDoc = await db.collection("users").doc(decodedToken.uid).get();
+
+    if (!userDoc.exists) {
+      res.status(403).json({
+        success: false,
+        error: {
+          code: "USER_NOT_REGISTERED",
+          message: "Your CritaSpace user account has not been registered.",
+        },
+      });
+      return;
+    }
+
+    const userData = userDoc.data();
+
+    if (
+      typeof userData?.companyId !== "string" ||
+      !userData.companyId.trim() ||
+      !["admin", "user"].includes(userData.role as string) ||
+      userData.status !== "active"
+    ) {
+      res.status(403).json({
+        success: false,
+        error: {
+          code: "INVALID_USER_RECORD",
+          message: "Your CritaSpace user record is invalid or inactive.",
+        },
+      });
+      return;
+    }
+
+    if (userData?.status !== "active") {
+      res.status(403).json({
+        success: false,
+        error: {
+          code: "ACCOUNT_DISABLED",
+          message: "Your CritaSpace account is not active.",
+        },
+      });
+      return;
+    }
+
     req.user = {
       uid: decodedToken.uid,
       ...(decodedToken.email ? { email: decodedToken.email } : {}),
+      displayName: userData!.displayName,
+      companyId: userData!.companyId,
+      role: userData!.role,
+      status: userData!.status,
     };
 
     next();

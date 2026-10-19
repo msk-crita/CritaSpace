@@ -1,11 +1,15 @@
 import express from "express";
 import "dotenv/config";
 import { db } from "./config/firebase.js";
+import authRoutes from "./routes/authRoutes.js";
+import boardroomRoutes from "./routes/boardroomRoutes.js";
 
 const app = express();
 const PORT = Number(process.env.PORT);
 
 app.use(express.json());
+app.use("/api/auth", authRoutes);
+app.use("/api/boardrooms", boardroomRoutes);
 
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
@@ -34,6 +38,7 @@ app.use(
     res: express.Response,
     _next: express.NextFunction,
   ) => {
+    console.error("API error:", _err);
     res.status(500).json({
       success: false,
       error: {

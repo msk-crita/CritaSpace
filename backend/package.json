@@ -8,7 +8,9 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bootstrap:admin": "tsx src/scripts/bootstrapAdmin.ts",
+    "migrate:boardroom-registry": "tsx src/scripts/migrateBoardroomNameRegistry.ts"
   },
   "keywords": [],
   "author": "",
